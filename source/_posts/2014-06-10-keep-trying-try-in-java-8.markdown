@@ -71,7 +71,7 @@ if (person != null) {
     }
 };
 ```
-Again, your brain as to perform the mental exercise of navigating through the nested if chain, in order to understand what is really happening. This is all due these method calls returning null when a value is not present.
+Again, your brain has to perform the mental exercise of navigating through the nested if chain, in order to understand what is really happening. This is all due these method calls returning null when a value is not present.
 
 Fortunately, Java 8 introduces the `java.util.Optional` class. Instances of this class represent the presence or absence of a certain value. In pratice, you are basically "lifting" this value absence onto the type system. This enables your compiler to statically check if you are handling this absence properly or not.
 
@@ -105,14 +105,30 @@ However, Java 8 does not come with this `Try` class, so I decided to create one.
 
 I tried to stay faithfull to both the original scala API and the Java 8 Optional API. You guys can check out the code [here](https://github.com/lpedrosa/try "Java 8 Try implementation").
 
-Much like `java.util.Optional`, this implementation provides the static method [Try.of(ThrowableSupplier supplier)](https://github.com/lpedrosa/try/blob/master/src/main/java/com/lpedrosa/util/Try.java#L54 "Try.of method implementation") which allows you to wrap a value of a certain computation with a Try. For example:
+Much like `java.util.Optional`, this implementation provides the static method [Try.of()](https://github.com/lpedrosa/try/blob/master/src/main/java/com/lpedrosa/util/Try.java#L54 "Try.of method implementation") which allows you to wrap a value of a certain computation with a Try. For example:
 ```java
 String supposedInt = "A";
 
 Try<Integer> parsedInt = Try.of(() -> Integer.parseInt(supposedInt));
 // parseInt now holds a NumberFormatException
 ```
+Once you have the wrapped computation, you start chaining it with other computations (which may also fail of course!). `Try` allows you to perform high-order functions like map, flatMap, filter which will short-circuit either:
 
+* when the Try value is already a failure or;
+* when the computation you are trying to apply fails (e.g. due to an exception).
+
+Once a failure occurs, it will be propagated through the chain, much like in an `Optional`. Here is an example of these features in action:
+```java
+// assume it fails with a PersonNotFoundException
+Try<Person> person = Try.of(() -> PersonDB.getById(5)); 
+
+// this will still keep the PersonNotFoundException
+Try<Address> = person.map(person -> person.getAddress());
+```
+### Error recovery
+
+
+<!--
 ## Structure
 - Intro to Try. Briefly mention Optional.
 - Optional class review
@@ -155,3 +171,4 @@ orElse allows you to provide a default value for the failed computation. orElseG
 ### Sources:
 - http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-error-handling-with-try.html
 - http://tersesystems.com/2012/12/27/error-handling-in-scala/
+-->
