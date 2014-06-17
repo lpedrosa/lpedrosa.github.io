@@ -7,19 +7,19 @@ published: false
 categories: [Java, Functional Programming]
 ---
 
-Java 8 brought us some features that definitely improve the life of a Java developer. The inclusion of _lambdas_ (anonymous functions), as well as the _Stream_ API, allow us to manage collection iteration in a much more functional way. 
+Java 8 brought us some features that definitely improved the life of a Java developer. The inclusion of _lambdas_ (anonymous functions), as well as the _Stream_ API, allowed us to manage collection iteration in a much more functional way. 
 
-Also, by adding `java.util.concurrent.CompletableFuture`, as well as some other concurrency API goodies, the developer is able to express concurrent task in a much more comprehensive way.
+Also, by adding `java.util.concurrent.CompletableFuture`, as well as some other concurrency API goodies, the developer is able to express concurrent tasks in a much more comprehensive way.
 
-Overall, I think that _JDK8_ will give us the ability to express our intentions in a much more concise and readable way. This will also have a positive effect on code maintenance, which can translate in a lower barrier of entry to new codebases (e.g. when you start a new job, _dive_ into a open source project) and less boilerplate.
+Overall, I think that Java 8 gives us the ability to express our intentions in a much more concise and readable way. This will also have a positive effect on code maintenance, which can translate in a lower barrier of entry to new codebases (e.g. when you start a new job, _dive_ into a open source project) and less boilerplate.
 
 ## Error handling and _Optional_
 
 Java's way of error handling is through throwing and catching exceptions. These exceptions should only be thrown when an exceptional condition happens (e.g. illegal parameter passed into method, error parsing string, etc.).
 
-At the time this as an huge improvement over _C_ code error handling, which usually consists in keeping track of a bunch of error constants. Unlike exceptions, which are simple Java objects, they are not able hold any extra information regarding the error they represent.
+At the time this was an huge improvement over _C_ code error handling, which usually consists in keeping track of a bunch of error constants. Unlike exceptions, which are simple Java objects, they are not able to hold any extra information regarding the error they represent.
 
-You would normally handle exception by wrapping the code with a try-catch block such as:
+You would normally handle exceptions by wrapping the code with a try-catch block such as:
 ```java
 try {
     computationThatMightFail();
@@ -103,7 +103,7 @@ But wait, isn't that what you do when you add `throws Exception` on a method's s
 
 However, Java 8 does not come with this `Try` class, so I decided to create one. Unlike scala's `Try`, this one does not use case subclassing internally (i.e. `Success`, `Failure`). I felt it wasn't needed since Java 8 does not support pattern matching (I believe the same reasoning was behind the implementation of `java.util.Optional`, whereas in `scala.Option` you have a `Some` and `None` case classes).
 
-I tried to stay faithfull to both the original scala API and the Java 8 Optional API. You guys can check out the code [here](https://github.com/lpedrosa/try "Java 8 Try implementation").
+I tried to stay faithful to both the original scala API and the Java 8 Optional API. You guys can check out the code [here](https://github.com/lpedrosa/try "Java 8 Try implementation").
 
 Much like `java.util.Optional`, this implementation provides the static method [Try.of()](https://github.com/lpedrosa/try/blob/master/src/main/java/com/lpedrosa/util/Try.java#L54 "Try.of method implementation") which allows you to wrap a value of a certain computation with a Try. For example:
 ```java
@@ -112,9 +112,9 @@ String supposedInt = "A";
 Try<Integer> parsedInt = Try.of(() -> Integer.parseInt(supposedInt));
 // parseInt now holds a NumberFormatException
 ```
-Once you have the wrapped computation, you start chaining it with other computations (which may also fail of course!). `Try` allows you to perform high-order functions like map, flatMap, filter which will short-circuit either:
+Once you have the wrapped computation, you start chaining it with other computations (which may also fail of course!). `Try` allows you to perform high-order functions like `map`, `flatMap`, `filter` which will short-circuit either:
 
-* when the Try value is already a failure or;
+* when the `Try` value is already a failure or;
 * when the computation you are trying to apply fails (e.g. due to an exception).
 
 Once a failure occurs, it will be propagated through the chain, much like in an `Optional`. Here is an example of these features in action:
@@ -122,12 +122,50 @@ Once a failure occurs, it will be propagated through the chain, much like in an 
 // assume it fails with a PersonNotFoundException
 Try<Person> person = Try.of(() -> PersonDB.getById(5)); 
 
-// this will still keep the PersonNotFoundException
-Try<Address> = person.map(person -> person.getAddress());
+Try<Address> address = person.map(person -> person.getAddress());
+// address will still contain the PersonNotFoundException
 ```
 ### Error recovery
+The `Try` class provides you with a couple of ways to recover from an error contained in it. Like `Optional`, you can use `orElse` to provide a default value. You can also use `orElseGet` when you want to call an alternative method instead (bearing in mind that this might also fail). For example:
+```java
+final long personID = 42;
 
+// Tries to get the person from the cache, otherwise try to
+// get it from the DB
+Try<Person> person = Try.of(() -> PersonCache.get(personID))
+                        .orElseGet(() -> PersonDB.get(personID));
+```
+Both methods, `orElse` and `orElseGet` disregard the type of the underlying exception. If you desire to act upon a specific exception then you can use `recover` or `recoverWith`.
 
+These methods are similar to `map` and `flatMap` but they provide the underlying function with the current exception, so you can act upon a specific case. For example:
+```java
+Try<Integer> parsedInt = Try.of(() -> Integer.parseInt("A"))
+                            .recover((throwable) -> {
+                                if (NumberFormatException.class.isAssignableFrom(t.getClass()) {
+                                    // do something
+                                }
+                            });
+```
+However this is not very readable (unfortunately Java does not have pattern matching, otherwise this would be a bit nicer). You can also re-wrap the exception using `recoverWith`:
+```java
+Try.of(() -> Integer.parseInt("A"))
+   .recoverWith(t -> Try.failure(new MyException("wrapped another exception", t)));
+```
+---
+
+In sum, `Try` allows you to wrap computations that might fail, so you can chain these with other computations, in a safe manner. It also forces you to deal with failure, since to get the underlying value you must unwrap the `Try`, which might result in a exception.
+
+There are some downsides of using `Try`. Whenever you return a `Try` instance from a public method, you are forcing the method's client to deal with the error. This might not be what you want, especially if you were not a fan of checked exceptions.
+
+Another downside is that dealing with `Try`'s might be a bit cumbersome for some, since Java does not provide a monadic comprehension (like scala's for comprehension and haskell's do).
+
+It is not contained in the standard library, unlike `Optional`. This might not be a problem for some, but it is still a minor inconvenience.
+
+Again, you can check the implementation of `Try` [here](https://github.com/lpedrosa/try "Java 8 Try implementation").
+
+### Sources
+- http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-error-handling-with-try.html
+- http://tersesystems.com/2012/12/27/error-handling-in-scala/
 <!--
 ## Structure
 - Intro to Try. Briefly mention Optional.
