@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: 
-
-Sitemap: http://lpedrosa.github.io/sitemap.xml 
