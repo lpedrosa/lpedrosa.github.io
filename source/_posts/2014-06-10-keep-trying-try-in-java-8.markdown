@@ -3,7 +3,7 @@ layout: post
 title: "Keep trying! Try in Java 8"
 date: 2014-06-10 16:33:04 +0100
 comments: false
-published: false
+published: true
 categories: [Java, Functional Programming]
 ---
 
