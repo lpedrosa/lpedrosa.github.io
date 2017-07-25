@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Java | Highly Explosive Programming]]></title>
+  <link href="http://lpedrosa.github.io/blog/categories/java/atom.xml" rel="self"/>
+  <link href="http://lpedrosa.github.io/"/>
+  <updated>2014-06-19T14:45:02+01:00</updated>
+  <id>http://lpedrosa.github.io/</id>
+  <author>
+    <name><![CDATA[lpedrosa]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Keep Trying! Try in Java 8]]></title>
+    <link href="http://lpedrosa.github.io/blog/2014/06/10/keep-trying-try-in-java-8/"/>
+    <updated>2014-06-10T16:33:04+01:00</updated>
+    <id>http://lpedrosa.github.io/blog/2014/06/10/keep-trying-try-in-java-8</id>
+    <content type="html"><![CDATA[<p>Java 8 brought us some features that definitely improved the life of a Java developer. The inclusion of <em>lambdas</em> (anonymous functions), as well as the <em>Stream</em> API, allowed us to manage collection iteration in a much more functional way.</p>
+
+<p>Also, by adding <code>java.util.concurrent.CompletableFuture</code>, as well as some other concurrency API goodies, the developer is able to express concurrent tasks in a much more comprehensive way.</p>
+
+<p>Overall, I think that Java 8 gives us the ability to express our intentions in a much more concise and readable way. This will also have a positive effect on code maintenance, which can translate in a lower barrier of entry to new codebases (e.g. when you start a new job, <em>dive</em> into a open source project) and less boilerplate.</p>
+
+<!-- more -->
+
+
+<h2>Error handling and <em>Optional</em></h2>
+
+<p>Java&rsquo;s way of error handling is through throwing and catching exceptions. These exceptions should only be thrown when an exceptional condition happens (e.g. illegal parameter passed into method, error parsing string, etc.).</p>
+
+<p>At the time this was an huge improvement over <em>C</em> code error handling, which usually consists in keeping track of a bunch of error constants. Unlike exceptions, which are simple Java objects, they are not able to hold any extra information regarding the error they represent.</p>
+
+<p>You would normally handle exceptions by wrapping the code with a try-catch block such as:
+```java
+try {</p>
+
+<pre><code>computationThatMightFail();
+</code></pre>
+
+<p>} catch (Exception e) {</p>
+
+<pre><code>// do something the exception
+</code></pre>
+
+<p>}
+<code>
+All the error handling is deferred to the catch block. This all sounds pretty simple, until you start getting multiple try-catch blocks in a row:
+</code>java
+String configOption = null;
+try {</p>
+
+<pre><code>configOption = fetchFromConfig();
+</code></pre>
+
+<p>} catch (ConfigurationException e) {</p>
+
+<pre><code>System.out.println("Failed to fetch config option from config", e);
+System.out.println("Using default value for config option");
+configOption = someDefaultValue;
+</code></pre>
+
+<p>}</p>
+
+<p>Connection conn = null;
+try {</p>
+
+<pre><code>conn = openConnection(configOption);
+</code></pre>
+
+<p>} catch (IOException e) {</p>
+
+<pre><code>System.out.println("Failed to open connection!", e);
+</code></pre>
+
+<p>}</p>
+
+<p>String result = null;
+try {</p>
+
+<pre><code>conn.doSomething();
+</code></pre>
+
+<p>} catch(IOException e) {</p>
+
+<pre><code>System.out.println("Something failed while doing something!", e);
+</code></pre>
+
+<p>}</p>
+
+<p>// etc&hellip;
+```
+As you can see, your brain has to filter the try-catch blocks out in order to figure out what is really happening.</p>
+
+<p>You might encounter a similar situation when handling computations that might return null, in order to avoid a <code>NullPointerException</code>:
+```java
+Person person = getPersonFromDB();
+if (person != null) {</p>
+
+<pre><code>Address address = p.getAddress();
+if (address != null) {
+    String streetName = a.getStreetName();
+    if (streetName != null) {
+        System.out.println(streetName);
+    } else {
+        System.out.println("Street name unknown");
+    }
+}
+</code></pre>
+
+<p>};
+```
+Again, your brain has to perform the mental exercise of navigating through the nested if chain, in order to understand what is really happening. This is all due these method calls returning null when a value is not present.</p>
+
+<p>Fortunately, Java 8 introduces the <code>java.util.Optional</code> class. Instances of this class represent the presence or absence of a certain value. In pratice, you are basically &ldquo;lifting&rdquo; this value absence onto the type system. This enables your compiler to statically check if you are handling this absence properly or not.</p>
+
+<p>An instance of the <code>Optional</code> class can be either empty or it can contain a reference to the value. For example:
+<code>java
+Optional&lt;String&gt; str = Optional.of("Some value"); // contains a value
+Optional&lt;String&gt; empty = Optional.empty();        // does not contain a value
+</code>
+<code>Optional</code> also allows you to wrap a value that might be null through the static method <code>Optional.ofNullable()</code>. This allows, combined with <code>Optional</code>&rsquo;s ability to support high-order functions (e.g. map, flatMap, filter), to express the above chain in the following manner:
+```java
+Optional<Person> person = Optional.ofNullable(getPersonFromDB());</p>
+
+<p>String streetName = person.map(person &ndash;> person.getAddress())</p>
+
+<pre><code>                      .map(address -&gt; address.getStreetName())
+                      .orElse("Street name unknown");
+</code></pre>
+
+<p>System.out.println(streetName);
+<code>``
+Optional's map implementation will short-circuit if the value you are mapping on is equal to</code>Optional.empty()`. This means the mapping function will not be applied to the value and the empty instance will propagate through the chain. Nevertheless, the code becomes a little bit more readable and puts less strain on your brain when trying to understand it.</p>
+
+<p>Now, I am pretty sure this as crossed someone&rsquo;s mind at least once. What if we had a similar class to Optional, but instead wraps exceptions rather than null values. That could be insteresting&hellip;</p>
+
+<h2>Try</h2>
+
+<p>Turns out the guys at Twitter had that exact same thought. They came up with this class called <code>Try</code> that holds the value of a computation or a failure (i.e. exception). It even made it into the <a href="http://www.scala-lang.org/api/current/#scala.util.Try" title="Scala's Try API docs">scala&rsquo;s API</a>. One of the main reason&rsquo;s for the existence of this class was that this enabled you to pass computation results in between threads, even if they resulted in an error.
+Like Optional it also &ldquo;lifts&rdquo; error handling onto to the type system. It warns the client of a specific method that it&rsquo;s result might wrap an error and it needs to handle this error accordingly.</p>
+
+<p>But wait, isn&rsquo;t that what you do when you add <code>throws Exception</code> on a method&rsquo;s signature? Well yes, but this is an object rather then a language construct. Much like <code>Optional</code>, <code>Try</code> allows you to chain computations together, short-circuiting on the first error and propagating through the wrapped result.</p>
+
+<p>However, Java 8 does not come with this <code>Try</code> class, so I decided to create one. Unlike scala&rsquo;s <code>Try</code>, this one does not use case subclassing internally (i.e. <code>Success</code>, <code>Failure</code>). I felt it wasn&rsquo;t needed since Java 8 does not support pattern matching (I believe the same reasoning was behind the implementation of <code>java.util.Optional</code>, whereas in <code>scala.Option</code> you have a <code>Some</code> and <code>None</code> case classes).</p>
+
+<p>I tried to stay faithful to both the original scala API and the Java 8 Optional API. You guys can check out the code <a href="https://github.com/lpedrosa/try" title="Java 8 Try implementation">here</a>.</p>
+
+<p>Much like <code>java.util.Optional</code>, this implementation provides the static method <a href="https://github.com/lpedrosa/try/blob/master/src/main/java/com/lpedrosa/util/Try.java#L54" title="Try.of method implementation">Try.of()</a> which allows you to wrap a value of a certain computation with a Try. For example:
+```java
+String supposedInt = &ldquo;A&rdquo;;</p>
+
+<p>Try<Integer> parsedInt = Try.of(() &ndash;> Integer.parseInt(supposedInt));
+// parseInt now holds a NumberFormatException
+<code>``
+Once you have the wrapped computation, you start chaining it with other computations (which may also fail of course!).</code>Try<code>allows you to perform high-order functions like</code>map<code>,</code>flatMap<code>,</code>filter` which will short-circuit either:</p>
+
+<ul>
+<li>when the <code>Try</code> value is already a failure or;</li>
+<li>when the computation you are trying to apply fails (e.g. due to an exception).</li>
+</ul>
+
+
+<p>Once a failure occurs, it will be propagated through the chain, much like in an <code>Optional</code>. Here is an example of these features in action:
+```java
+// assume it fails with a PersonNotFoundException
+Try<Person> person = Try.of(() &ndash;> PersonDB.getById(5));</p>
+
+<p>Try<Address> address = person.map(person &ndash;> person.getAddress());
+// address will still contain the PersonNotFoundException
+```</p>
+
+<h3>Error recovery</h3>
+
+<p>The <code>Try</code> class provides you with a couple of ways to recover from an error contained in it. Like <code>Optional</code>, you can use <code>orElse</code> to provide a default value. You can also use <code>orElseGet</code> when you want to call an alternative method instead (bearing in mind that this might also fail). For example:
+```java
+final long personID = 42;</p>
+
+<p>// Tries to get the person from the cache, otherwise try to
+// get it from the DB
+Try<Person> person = Try.of(() &ndash;> PersonCache.get(personID))</p>
+
+<pre><code>                    .orElseGet(() -&gt; PersonDB.get(personID));
+</code></pre>
+
+<p><code>``
+Both methods,</code>orElse<code>and</code>orElseGet<code>disregard the type of the underlying exception. If you desire to act upon a specific exception then you can use</code>recover<code>or</code>recoverWith`.</p>
+
+<p>These methods are similar to <code>map</code> and <code>flatMap</code> but they provide the underlying function with the current exception, so you can act upon a specific case. For example:
+```java
+Try<Integer> parsedInt = Try.of(() &ndash;> Integer.parseInt(&ldquo;A&rdquo;))</p>
+
+<pre><code>                        .recover((throwable) -&gt; {
+                            if (NumberFormatException.class.isAssignableFrom(t.getClass()) {
+                                // do something
+                            }
+                        });
+</code></pre>
+
+<p><code>
+However this is not very readable (unfortunately Java does not have pattern matching, otherwise this would be a bit nicer). You can also re-wrap the exception using `recoverWith`:
+</code>java
+Try.of(() &ndash;> Integer.parseInt(&ldquo;A&rdquo;))
+   .recoverWith(t &ndash;> Try.failure(new MyException(&ldquo;wrapped another exception&rdquo;, t)));</p>
+
+<h2>```</h2>
+
+<p>In sum, <code>Try</code> allows you to wrap computations that might fail, so you can chain these with other computations, in a safe manner. It also forces you to deal with failure, since to get the underlying value you must unwrap the <code>Try</code>, which might result in a exception.</p>
+
+<p>There are some downsides of using <code>Try</code>. Whenever you return a <code>Try</code> instance from a public method, you are forcing the method&rsquo;s client to deal with the error. This might not be what you want, especially if you were not a fan of checked exceptions.</p>
+
+<p>Another downside is that dealing with <code>Try</code>&rsquo;s might be a bit cumbersome for some, since Java does not provide a monadic comprehension (like scala&rsquo;s for comprehension and haskell&rsquo;s do).</p>
+
+<p>It is not contained in the standard library, unlike <code>Optional</code>. This might not be a problem for some, but it is still a minor inconvenience.</p>
+
+<p>Again, you can check the implementation of <code>Try</code> <a href="https://github.com/lpedrosa/try" title="Java 8 Try implementation">here</a>.</p>
+
+<h3>Sources</h3>
+
+<ul>
+<li><a href="http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-error-handling-with-try.html">http://danielwestheide.com/blog/2012/12/26/the-neophytes-guide-to-scala-part-6-error-handling-with-try.html</a></li>
+<li><a href="http://tersesystems.com/2012/12/27/error-handling-in-scala/">http://tersesystems.com/2012/12/27/error-handling-in-scala/</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>
