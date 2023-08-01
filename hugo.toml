@@ -1,0 +1,14 @@
+baseURL = 'https://lpedrosa.github.io/'
+
+theme = 'hugo-bearblog'
+
+title = 'Sequentially Parallel'
+author = 'Luis Pedrosa'
+copyright = 'Copyright @ 2023, Luis Pedrosa'
+languageCode = 'en-us'
+
+enableRobotsTXT = true
+
+[params]
+title = 'Sequentially Parallel'
+description = 'Articles about programming and sometimes other things'
