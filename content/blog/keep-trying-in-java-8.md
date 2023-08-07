@@ -1,8 +1,8 @@
----
-title: "Keep trying! Try in Java 8"
-date: 2014-06-10T16:33:04+01:00
-draft: false
----
++++
+title = "Keep trying! Try in Java 8"
+date = 2014-06-10T16:33:04+01:00
+draft = false
++++
 
 Java 8 brought us some features that definitely improved the life of a Java developer. The inclusion of _lambdas_ (anonymous functions), as well as the _Stream_ API, allowed us to manage collection iteration in a much more functional way.
 
