@@ -1,7 +1,7 @@
 +++
 title = "Why I Built EnvUtils"
 date = "2023-08-07T21:35:24+01:00"
-draft = true
+draft = false
 description = "I missed inline env overrides in windows so I built powershell module: EnvUtils"
 
 tags = []
