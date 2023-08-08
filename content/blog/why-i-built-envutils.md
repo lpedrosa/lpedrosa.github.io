@@ -12,7 +12,7 @@ TL;DR You can find EnvUtils module [on Github](https://github.com/lpedrosa/EnvUt
 Before experimenting with using Windows as a daily driver for work, I used to use Ubuntu.[^1]
 
 One thing I like about the Unix shell is that you can prefix a command with an environment variable,
-and the environment value will _only be overridden for that single command_.
+allowing the environment value _to be overridden solely for that specific command_.
 
 ```sh
 # assuming FAVOURITE_FRUIT was not set before
@@ -20,9 +20,13 @@ FAVOURITE_FRUIT=kiwi python -c 'import os; print(os.getenv("FAVOURITE_FRUIT))'
 kiwi
 ```
 
-You might have come across this, if you have used the [express](https://expressjs.com/) web framework
-for example, and you wanted to set `NODE_ENV` to `production` so you could check if your production
-settings are correct.
+This situation might be familiar to those who have used the [express](https://expressjs.com/) web
+framework, where setting `NODE_ENV` to `production`, for instance, allows validation of production
+settings.
+
+```sh
+NODE_ENV=production node index.js
+```
 
 The cool thing about this feature is that it will restore the variable to whatever value it had
 before you ran the command.
@@ -39,7 +43,7 @@ echo $FAVOURITE_FRUIT
 apple
 ```
 
-## What about Windows?
+## How about Windows?
 
 While you cannot do the same thing on Windows, here is an attempt using `cmd`:
 
@@ -54,11 +58,11 @@ And another using PowerShell:
 $env:FAVOURITE_FRUIT='kiwi'; python -c 'import os; print(os.getenv("FAVOURITE_FRUIT"))'; $env:FAVOURITE_FRUIT=''
 ```
 
-In both cases, we get a similar effect to the Unix example, but it is important to note that we
-_lose the ability to restore the variable to its previous value_.
+In both cases, we can get close to the Unix example, but it is important to note that we _lose the
+ability to restore the variable to its previous value_.
 
-While you can modify the examples to make that work, they will no longer be _easy to type as a
-one-liner_ or even _easy to read_.
+While you can modify the examples to achieve this functionality, they will become _less convenient
+to type as one-liners_ and will also become _less readable_.
 
 ## Exploring a solution using PowerShell
 
@@ -98,16 +102,16 @@ apple
 
 `Invoke-Environment` covers all my use cases:
 
-- short enough to be easy to type
-- easy to read and to remember what it does
-- keeps the environment intact between calls
+- It is short enough to be easy to type
+- It is readable and easy to remember what it does
+- It keeps the environment intact between calls
 
 ## Making it work with `dotenv` files
 
 After using `Invoke-Environment` a couple of times, I wanted to keep a record of all the environment
 overrides in a file, so that I could also use it on docker. For that, I had to support `dotenv` files.
 
-Here is the typical usage of a `dotenv` file with docker:
+Here is an illustration of a typical `dotenv` file usage with docker:
 
 ```sh
 # filename: .env
@@ -124,8 +128,8 @@ And with `Invoke-Environment`:
 Invoke-Environment -EnvironmentFile .env { <# write your command here #> }
 ```
 
-Supporting the `dotenv` format meant writing a basic parser to convert the file into a PowerShell
-Hash Table. This was such a useful feature that I exposed it as a cmdlet:
+Enabling support for the `dotenv` format involved writing a basic parser to convert the file into a
+PowerShell Hash Table. This was such a useful feature that I exposed it as a cmdlet:
 
 ```powershell
 $Environment = ConvertFrom-Environment .env
@@ -136,14 +140,14 @@ debug
 ## Make the environment last between commands
 
 One last common pattern that I wanted to be able to do was the ability to source a `dotenv` file for
-a given shell session, so I could use the overrides between command invocations. I still wanted to
-keep the `dotenv` file format, and avoid pre-appending `set` to each line just so I could run
-`call .env`.
+a given shell session. This would enable the use of overrides across command invocations. I still
+aimed to keep the `dotenv` file format, and avoid needing to preface each line with a `set` solely
+for running `call .env`.
 
 That being said, I added the following commands to support this workflow: `New-Environment`,
 `Get-Environment`, and `Remove-Environment`.
 
-Here is an example of a workflow using these cmdlets:
+Here is an example workflow using these cmdlets:
 
 ```powershell
 # load the env into the shell session
