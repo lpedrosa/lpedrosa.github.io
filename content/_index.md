@@ -15,5 +15,5 @@ Sometimes I help with *Product* and *Sales*, but I love to code:
 
 I am mostly comfortable with Java, but I have done Typescript, .NET 6, Python and others.
 
-I’ve been working remotely for [tru.ID](https://tru.id/) for the past 3 years, to build a better way
+I've been working remotely for [tru.ID](https://tru.id/) for the past 3 years, to build a better way
 to trust your digital identity.
