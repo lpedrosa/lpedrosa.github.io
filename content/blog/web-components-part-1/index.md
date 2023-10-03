@@ -1,23 +1,23 @@
 +++
 title = "Web Components Part 1"
 date = "2023-10-01T11:55:17+01:00"
-draft = true
+draft = false
 description = "Part 1 of exploring the current state of Web Components: defining, styling and exposing a custom element's API."
 
 
 tags = []
 +++
 
-> TODO: add missing link to github repo with the full code example used by this article
+> You can find the full examples used in this blog series [on Github](https://github.com/lpedrosa/webcomponents-blog-examples)
 
-Web Components are bundled with all the modern browser. They give you common APIs to define an
+Web Components are bundled with all the modern browsers. They give you common APIs to define an
 encapsulated HTML component without having to think about **importing a library** or
 **running any build tools**.
 
 I have split this article into three parts:
 
 - Part 1: Defining a custom element - configuring and styling the element, exposing an API
-- Part 2: Composing elements and state - building complex components, communicating between them and events.
+- Part 2: Composing elements and state - building complex components, communicating between using events.
 - Part 3: Learnings and common Gotchas - things I have learned while just using the vanilla APIs
 
 Also, I am assuming that you know a bit of React and are quite familiar with the DOM APIs.
@@ -35,7 +35,7 @@ JavaScript was a bit more immature back then (e.g. no modules/exports), and the 
 minimal. You relied on jQuery to make this experience more pleasant (and perhaps slightly more
 maintainable).
 
-Fast-forward a couple of years, I decided to distance from front-end technologies.
+Fast-forward a couple of years, I decided to distance myself from front-end technologies.
 
 Looking back, maybe it was because the developer experience *was not very* *inviting.* However, when
 React started to become a bit more famous I decided to look into it.
