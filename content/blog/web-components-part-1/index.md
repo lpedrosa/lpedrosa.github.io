@@ -17,7 +17,7 @@ encapsulated HTML component without having to think about **importing a library*
 I have split this article into three parts:
 
 - Part 1: Defining a custom element - configuring and styling the element, exposing an API
-- Part 2: Composing elements and state - building complex components, communicating between using events.
+- [Part 2: Composing elements and state - building complex components, communicating between using events.]({{<ref "/blog/web-components-part-2">}})
 - Part 3: Learnings and common Gotchas - things I have learned while just using the vanilla APIs
 
 Also, I am assuming that you know a bit of React and are quite familiar with the DOM APIs.
@@ -37,7 +37,7 @@ maintainable).
 
 Fast-forward a couple of years, I decided to distance myself from front-end technologies.
 
-Looking back, maybe it was because the developer experience *was not very* *inviting.* However, when
+Looking back, maybe it was because the developer experience _was not very_ _inviting._ However, when
 React started to become a bit more famous I decided to look into it.
 
 Declarative rendering, the principles behind componentization, and JSX, meant that things that were
@@ -55,7 +55,7 @@ There were still some challenges:
 - Fetching data, dealing with async actions or even handling forms wasn't very intuitive
 
 Added to this, the ongoing separation between front-end and back-end meant that you could
-*safely ignore* this complexity and *effectively hide* in the back-end team. All you had to do was
+_safely ignore_ this complexity and _effectively hide_ in the back-end team. All you had to do was
 to make sure your API was working, and was properly documented, so to be consumed by the front-end
 team.
 
@@ -183,10 +183,10 @@ Try pasting the following snippet after the first `script` tag:
 
 ```html
 <script type="module">
-    const customHelloWorld = document.querySelector('hello-world');
+  const customHelloWorld = document.querySelector("hello-world");
 
-    // this should change the greeting to "Hello Alice"
-    customHelloWorld.setAttribute("greeting-target", "Alice");
+  // this should change the greeting to "Hello Alice"
+  customHelloWorld.setAttribute("greeting-target", "Alice");
 </script>
 ```
 
@@ -261,7 +261,6 @@ We can improve the `HelloWorld` component's JavaScript API by exposing the attri
 
 ```js
 class HelloWorld extends HTMLElement {
-
   get greetingTarget() {
     return this.getAttribute("greeting-target") ?? "World";
   }
@@ -309,7 +308,7 @@ Try adding this fancy style to the `head` tag:
 The `<hello-world>` element and its children will now have a different style than the other elements
 on the page.
 
-However, there are times were you might want to offer a *styled component* to your consumers. Also,
+However, there are times were you might want to offer a _styled component_ to your consumers. Also,
 you don't want the style of your custom element to affect other elements in your page. Fortunately,
 there is a way to achieve this encapsulation: the shadow DOM.
 
@@ -362,9 +361,10 @@ anything outside of our custom element:
 
   <!-- this element will use the default stylesheet -->
   <h1>Another h1 using default styling</h1>
+</body>
 ```
 
-# Wrapping up
+## Wrapping up
 
 So for this part 1, we have learned how to declare a custom element. Custom elements encapsulate
 both rendering and functionality of your custom components.
@@ -379,8 +379,9 @@ Custom elements (and their children) can be styled through CSS, just like any ot
 If you wish to enforce a style on your elements, but you do not want those styles to influence the
 other elements on the page, you should attach a shadow DOM node to your element.
 
-Next time, we will explore how to build complex components  and how to communicate using DOM events.
+Next time, we will explore how to build complex components and how to communicate using DOM events.
 
-[^1]: To be fair on React, Web Components do not dictate a particular rendering process, so you can
-      choose to be declarative or imperative, making these actions more intuitive than solving them
-      while using React.
+[^1]:
+    To be fair on React, Web Components do not dictate a particular rendering process, so you can
+    choose to be declarative or imperative, making these actions more intuitive than solving them
+    while using React.
