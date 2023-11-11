@@ -17,8 +17,8 @@ encapsulated HTML component without having to think about **importing a library*
 I have split this article into three parts:
 
 - Part 1: Defining a custom element - configuring and styling the element, exposing an API
-- [Part 2: Composing elements and state - building complex components, communicating between using events.]({{<ref "/blog/web-components-part-2">}})
-- Part 3: Learnings and common Gotchas - things I have learned while just using the vanilla APIs
+- [Part 2: Composing elements and state - building complex components, communicating between using events]({{<ref "/blog/web-components-part-2">}})
+- [Part 3: Learnings and common Gotchas - things I have learned while just using the vanilla APIs]({{<ref "/blog/web-components-part-3">}})
 
 Also, I am assuming that you know a bit of React and are quite familiar with the DOM APIs.
 

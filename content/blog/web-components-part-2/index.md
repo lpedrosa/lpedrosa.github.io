@@ -12,8 +12,8 @@ tags = []
 This is part 2 of my Web Components series:
 
 - [Part 1: Defining a custom element - configuring and styling the element, exposing an API]({{<ref "/blog/web-components-part-1">}})
-- Part 2: Composing elements and state - building complex components, communicating between using events.
-- Part 3: Learnings and common Gotchas - things I have learned while just using the vanilla APIs
+- Part 2: Composing elements and state - building complex components, communicating between using events
+- [Part 3: Learnings and common Gotchas - things I have learned while just using the vanilla APIs]({{<ref "/blog/web-components-part-3">}})
 
 In the last article we went through how to declare a Custom Element, how to configure the element
 through HTML attributes and how to style the element.
