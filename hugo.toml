@@ -4,7 +4,7 @@ theme = 'hugo-bearblog'
 
 title = 'Sequentially Parallel'
 author = 'Luis Pedrosa'
-copyright = 'Copyright @ 2023, Luis Pedrosa'
+copyright = 'Copyright @ 2024, Luis Pedrosa'
 languageCode = 'en-us'
 
 enableRobotsTXT = true
