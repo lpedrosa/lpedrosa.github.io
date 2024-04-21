@@ -1,7 +1,7 @@
 +++
 title = "Resources Demystified"
 date = "2024-04-20T20:22:13+01:00"
-draft = true
+draft = false
 description = "What is a java resource and how to work with resources"
 
 tags = []
@@ -147,4 +147,4 @@ try (var reader = new BufferedReader(new InputStreamReader(resource))) {
 [^1]: https://docs.oracle.com/javase/8/docs/technotes/guides/lang/resources.html
 [^2]:
     [Check the posts by Tim Holloway](https://coderanch.com/t/734998/java/Resources-jar-file-practices),
-    which clarify a how is a resource different from a file
+    which clarify how a resource is different from a file
