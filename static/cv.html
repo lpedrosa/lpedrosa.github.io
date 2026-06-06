@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luis Pedrosa - CV</title>
+    <style>
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2b6cb0;
+            --text-color: #2d3748;
+            --text-muted: #718096;
+            --bg-color: #f7fafc;
+            --border-color: #e2e8f0;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-color);
+            line-height: 1.5;
+            background-color: var(--bg-color);
+            padding: 40px 0;
+        }
+
+        .cv-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 40px;
+            border-bottom: 4px solid var(--secondary-color);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 5px;
+        }
+
+        header .subtitle {
+            font-size: 1.25rem;
+            color: #90cdf4;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        header .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        header .contact-info a {
+            color: #e2e8f0;
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.4);
+            transition: color 0.2s ease, border-color 0.2s ease;
+        }
+
+        header .contact-info a:hover {
+            color: #ffffff;
+            border-bottom-style: solid;
+        }
+
+        header .contact-info span.separator {
+            color: #4a5568;
+        }
+
+        .cv-content {
+            display: flex;
+            flex-direction: row;
+            min-height: 800px;
+        }
+
+        .main-col {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .sidebar-col {
+            width: var(--sidebar-width);
+            background-color: #f8fafc;
+            border-left: 1px solid var(--border-color);
+            padding: 40px 30px;
+        }
+
+        section {
+            margin-bottom: 35px;
+        }
+
+        section:last-child {
+            margin-bottom: 0;
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+
+        .profile-text {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            text-align: justify;
+        }
+
+        .job {
+            margin-bottom: 25px;
+            page-break-inside: avoid;
+        }
+
+        .job:last-child {
+            margin-bottom: 0;
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .job-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1a202c;
+        }
+
+        .job-company {
+            font-weight: 600;
+            color: var(--secondary-color);
+        }
+
+        .job-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .job ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .job ul li {
+            position: relative;
+            padding-left: 15px;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .job ul li::before {
+            content: "•";
+            color: var(--secondary-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .skill-group {
+            margin-bottom: 20px;
+        }
+
+        .skill-group h3 {
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            margin-bottom: 8px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .skill-tag {
+            background-color: #edf2f7;
+            color: #4a5568;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .education-item {
+            margin-bottom: 15px;
+        }
+
+        .education-degree {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .education-school {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .education-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .language-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .language-level {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Print styling rules */
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+            }
+
+            .cv-container {
+                box-shadow: none;
+                max-width: 100%;
+                border-radius: 0;
+            }
+
+            header {
+                background-color: var(--primary-color) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            header .contact-info a {
+                border-bottom: none;
+            }
+
+            .sidebar-col {
+                background-color: #f8fafc !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .skill-tag {
+                background-color: #edf2f7 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            /* Adjust page breaks */
+            .job {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cv-container">
+        <header>
+            <h1>Luis Pedrosa</h1>
+            <div class="subtitle">Principal / Staff Software Engineer & Technical Leader</div>
+            <div class="contact-info">
+                <a href="mailto:lpedrosa88@gmail.com">lpedrosa88@gmail.com</a>
+                <span class="separator">•</span>
+                <a href="https://www.linkedin.com/in/lpedrosa88/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <span class="separator">•</span>
+                <a href="https://github.com/lpedrosa" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <span class="separator">•</span>
+                <a href="https://lpedrosa.github.io/" target="_blank" rel="noopener noreferrer">Blog</a>
+                <span class="separator">•</span>
+                <span>London, UK (Open to Remote)</span>
+            </div>
+        </header>
+        
+        <div class="cv-content">
+            <main class="main-col">
+                <section>
+                    <h2>Profile</h2>
+                    <p class="profile-text">
+                        High-impact Technical Leader and Hands-on Architect with over 12 years of experience designing and scaling high-throughput APIs, authentication frameworks, and distributed systems. Proven track record of bridging engineering excellence with business outcomes, having served in Principal, Engineering Management, and VP roles. Passionate about shaping technical direction, mentoring engineers, and building robust, cost-effective architectures.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Experience</h2>
+                    
+                    <div class="job">
+                        <div class="job-header">
+                            <div>
+                                <span class="job-title">VP of Engineering</span> at <span class="job-company">Yapily</span>
+                            </div>
+                            <span class="job-date">Nov 2023 – Present</span>
+                        </div>
+                        <ul>
+                            <li><strong>Architectural Leadership:</strong> Spearheaded the redesign of the core Bank Connection architecture, reducing bank onboarding integration time from 2 weeks to 2 days and significantly lowering maintenance costs of existing connections.</li>
+                            <li><strong>Operational Excellence:</strong> Overhauled the SDLC and support processes, resulting in a 90% reduction in high-impact production incidents through closer collaboration with CSM and Incident Management teams.</li>
+                            <li><strong>Team Scaling & Delivery:</strong> Successfully established a secondary developer site and onboarded 15+ software engineers, introducing high engineering standards and collaborative workflows.</li>
+                            <li><strong>Innovation & Efficiency:</strong> Initiated and drove the internal AI Developer Adoption project, curating developer tools and integrating AI-assisted workflows to boost team productivity.</li>
+                        </ul>
+                    </div>
+
+                    <div class="job">
+                        <div class="job-header">
+                            <div>
+                                <span class="job-title">Principal Engineer</span> at <span class="job-company">IDLayer (formerly tru.ID)</span>
+                            </div>
+                            <span class="job-date">Apr 2020 – Nov 2023</span>
+                        </div>
+                        <ul>
+                            <li><strong>Security & Auth Architecture:</strong> Designed and implemented the core platform authentication and identity framework from scratch, ensuring bank-grade security and low-latency validation.</li>
+                            <li><strong>Strategic Integrations:</strong> Led the technical integration for key IAM (Identity & Access Management) partnerships, enabling seamless onboarding of enterprise clients.</li>
+                            <li><strong>Next-Gen Auth R&D:</strong> Pioneered research and development combining FIDO Passkeys with silent mobile network authentication as a multi-factor proof-of-possession mechanism.</li>
+                            <li><strong>Hands-on Development:</strong> Led system design sessions and wrote high-quality, concurrent backend code using modern web-scale technologies.</li>
+                        </ul>
+                    </div>
+
+                    <div class="job">
+                        <div class="job-header">
+                            <div>
+                                <span class="job-title">Engineering Manager</span> at <span class="job-company">TrueLayer</span>
+                            </div>
+                            <span class="job-date">May 2018 – Jan 2020</span>
+                        </div>
+                        <ul>
+                            <li><strong>Product Bootstrapping:</strong> Led the engineering effort to design, architect, and bootstrap the initial Payments API product, establishing API design guidelines, core bank connection adapters, and integration testing frameworks.</li>
+                            <li><strong>Incident Management:</strong> Collaborated closely with customer support and engineering teams to establish robust incident handling and post-mortem procedures, drastically reducing time-to-resolution (TTR).</li>
+                        </ul>
+                    </div>
+
+                    <div class="job">
+                        <div class="job-header">
+                            <div>
+                                <span class="job-title">Lead Software Engineer</span> at <span class="job-company">Vonage (formerly Nexmo)</span>
+                            </div>
+                            <span class="job-date">May 2014 – May 2018</span>
+                        </div>
+                        <ul>
+                            <li><strong>Product Innovation:</strong> Guided the Voice API engineering team to build and launch the next-generation Programmable Voice API, incorporating complex multi-party conferencing, WebRTC, and text-to-speech capabilities.</li>
+                            <li><strong>Platform Re-engineering:</strong> Successfully redesigned and migrated the legacy billing and routing system powering the core SIP telecom infrastructure, improving throughput and reliability.</li>
+                            <li><strong>Team Mentorship & Growth:</strong> Mentored and scaled the Voice API engineering team into a high-performing, cross-functional engineering unit (Development + QA).</li>
+                        </ul>
+                    </div>
+                </section>
+            </main>
+
+            <aside class="sidebar-col">
+                <section>
+                    <h2>Education</h2>
+                    <div class="education-item">
+                        <div class="education-degree">MSc in Software Engineering</div>
+                        <div class="education-school">FEUP (University of Porto)</div>
+                        <div class="education-date">2006 – 2012</div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Skills</h2>
+                    
+                    <div class="skill-group">
+                        <h3>Languages</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">Kotlin</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">TypeScript</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-group">
+                        <h3>Architecture</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Microservices</span>
+                            <span class="skill-tag">Distributed Systems</span>
+                            <span class="skill-tag">Concurrency (CSP)</span>
+                            <span class="skill-tag">RESTful APIs</span>
+                            <span class="skill-tag">OAuth2 / OIDC</span>
+                            <span class="skill-tag">FIDO / Passkeys</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-group">
+                        <h3>Infrastructure</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Kubernetes</span>
+                            <span class="skill-tag">Docker</span>
+                            <span class="skill-tag">AWS</span>
+                            <span class="skill-tag">Cloud Native</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-group">
+                        <h3>Leadership</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Tech Direction</span>
+                            <span class="skill-tag">Governance</span>
+                            <span class="skill-tag">Mentorship</span>
+                            <span class="skill-tag">Agile SDLC</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2>Languages</h2>
+                    <div class="language-item">
+                        <span>English</span>
+                        <span class="language-level">Native</span>
+                    </div>
+                    <div class="language-item">
+                        <span>Portuguese</span>
+                        <span class="language-level">Native</span>
+                    </div>
+                    <div class="language-item">
+                        <span>Spanish</span>
+                        <span class="language-level">Basic</span>
+                    </div>
+                    <div class="language-item">
+                        <span>Japanese</span>
+                        <span class="language-level">Basic</span>
+                    </div>
+                </section>
+            </aside>
+        </div>
+    </div>
+</body>
+</html>

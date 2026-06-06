@@ -10,7 +10,7 @@ I like concurrency and distributed systems a lot!
 I also love reading about programming languages, and have contributed to [some](https://github.com/fsprojects/fantomas)
 [open source](https://github.com/ory/hydra) projects.
 
-You can find my resume [here](/resume.pdf)
+You can find my resume [here](/cv.html)
 
 You can reach me on:
 
